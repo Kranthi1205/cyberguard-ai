@@ -17,8 +17,8 @@ pipeline {
                 dir("${DOCKER_COMPOSE_PATH}") {
                     echo 'Building and starting containers...'
                     // We let Docker-compose handle the npm install inside the image
-                    sh 'docker-compose down'
-                    sh 'docker-compose up --build -d'
+                    sh 'docker compose down'
+                    sh 'docker compose up --build -d'
                 }
             }
         }
