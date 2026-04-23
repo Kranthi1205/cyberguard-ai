@@ -1,0 +1,44 @@
+version: '3.8'
+
+services:
+  mongodb:
+    image: mongo:latest
+    container_name: cyberguard-mongodb
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+    networks:
+      - cyberguard-network
+
+  backend:
+    build: ./backend
+    container_name: cyberguard-backend
+    ports:
+      - "5000:5000"
+    environment:
+      - MONGODB_URI=mongodb://mongodb:27017/cyberguard
+      - JWT_SECRET=${JWT_SECRET}
+      - GROQ_API_KEY=${GROQ_API_KEY}
+      - PORT=5000
+    depends_on:
+      - mongodb
+    networks:
+      - cyberguard-network
+
+  frontend:
+    build: ./frontend
+    container_name: cyberguard-frontend
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+    networks:
+      - cyberguard-network
+
+networks:
+  cyberguard-network:
+    driver: bridge
+
+volumes:
+  mongo-data:
